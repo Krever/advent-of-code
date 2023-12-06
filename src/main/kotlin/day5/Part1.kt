@@ -6,7 +6,7 @@ import java.io.File
 fun main(args: Array<String>) {
 
     val result = File(args[0]).useLines {
-        val lines = it.toMutableList()
+        val lines = it.toList()
         val almanac = parseAlmanac(lines)
         almanac.resolve().minOf { it.location }
     }
