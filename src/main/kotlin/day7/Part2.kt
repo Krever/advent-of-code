@@ -19,7 +19,7 @@ class ComparisonStrategy2 : ComparisonStrategy() {
         val lettersMap = hand.lettersMap()
         return if (lettersMap.contains('J')) {
             val withoutJokersMap = lettersMap.filterKeys { it != 'J' }
-            val numOfJokers = lettersMap.getOrElse('J') { 0 }
+            val numOfJokers = lettersMap['J'] ?: 0
             if (withoutJokersMap.size <= 1) HandType.FiveOfAKind
             else if (withoutJokersMap.exists { it == 4 - numOfJokers }) HandType.FourOfAKind
             else if (withoutJokersMap.size == 2) HandType.FullHouse
