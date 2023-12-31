@@ -16,6 +16,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-mtl-data:0.11.0")
     implementation("com.github.andrewoma.dexx:kollection:0.7")
     implementation("io.github.p-org.solvers:z3:4.8.14-v5")
+    implementation("org.jgrapht:jgrapht-core:1.5.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
