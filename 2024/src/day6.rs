@@ -1,5 +1,7 @@
 use itertools::Itertools;
 use std::collections::HashSet;
+use rayon::prelude::*;
+
 
 pub fn main() {
     let input = include_str!("day6.txt");
@@ -52,12 +54,16 @@ fn find_valid_obstruction_positions(
     start_pos: (isize, isize),
     path: HashSet<(isize, isize)>,
 ) -> HashSet<(isize, isize)> {
-    path.into_iter()
-        .filter(|&(row, col)| grid[row as usize][col as usize] == '.' && (row, col) != start_pos)
-        .filter(|&(row, col)| {
+    path.par_iter()
+        .filter(|&&(row, col)| grid[row as usize][col as usize] == '.' && (row, col) != start_pos)
+        .filter_map(|&(row, col)| {
             let mut modified_grid = grid.to_vec();
             modified_grid[row as usize][col as usize] = '#';
-            causes_loop(&modified_grid, start_pos)
+            if causes_loop(&modified_grid, start_pos) {
+                Some((row, col))
+            } else {
+                None
+            }
         })
         .collect()
 }
