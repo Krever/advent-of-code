@@ -30,3 +30,17 @@ impl Vec2 {
         self.row >= 0 && self.row < dimensions.row && self.col >= 0 && self.col < dimensions.col
     }
 }
+
+
+use std::time::Instant;
+
+pub fn measure_time<F, R>(label: &str, func: F) -> R
+where
+    F: FnOnce() -> R,
+{
+    let start = Instant::now();
+    let result = func();
+    let duration = start.elapsed();
+    println!("[{label}] Execution time: {:?}", duration);
+    result
+}
