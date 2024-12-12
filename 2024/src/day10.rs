@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use crate::common::Vec2;
+use crate::common::{Vec2, DIRECTIONS};
 
 pub fn main() {
     let input = include_str!("day10.txt");
@@ -72,13 +72,6 @@ fn find_destinations(map: &Map, pos: Vec2) -> Vec<Vec2> {
 }
 
 fn get_neighbors(pos: Vec2, map: &Map) -> Vec<Vec2> {
-    const DIRECTIONS: [Vec2; 4] = [
-        Vec2 { row: -1, col: 0 }, // Up
-        Vec2 { row: 1, col: 0 },  // Down
-        Vec2 { row: 0, col: -1 }, // Left
-        Vec2 { row: 0, col: 1 },  // Right
-    ];
-
     DIRECTIONS
         .iter()
         .filter_map(|&dir| {
