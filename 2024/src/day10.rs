@@ -44,8 +44,8 @@ fn find_all_zeros(map: &Map) -> Vec<Vec2> {
                 .filter_map(move |(col_idx, &value)| {
                     if value == 0 {
                         Some(Vec2 {
-                            row: row_idx as isize,
-                            col: col_idx as isize,
+                            y: row_idx as isize,
+                            x: col_idx as isize,
                         })
                     } else {
                         None
@@ -56,7 +56,7 @@ fn find_all_zeros(map: &Map) -> Vec<Vec2> {
 }
 
 fn find_destinations(map: &Map, pos: Vec2) -> Vec<Vec2> {
-    let current_value = map[pos.row as usize][pos.col as usize];
+    let current_value = map[pos.y as usize][pos.x as usize];
     if current_value == 9 {
         return vec![pos];
     }
@@ -64,7 +64,7 @@ fn find_destinations(map: &Map, pos: Vec2) -> Vec<Vec2> {
     get_neighbors(pos, map)
         .into_iter()
         .filter(|&neighbor| {
-            let neighbor_value = map[neighbor.row as usize][neighbor.col as usize];
+            let neighbor_value = map[neighbor.y as usize][neighbor.x as usize];
             neighbor_value == current_value + 1
         })
         .flat_map(|neighbor| find_destinations(map, neighbor))
@@ -87,7 +87,7 @@ fn get_neighbors(pos: Vec2, map: &Map) -> Vec<Vec2> {
 
 fn bounds(map: &Map) -> Vec2 {
     Vec2 {
-        row: map.len() as isize,
-        col: map[0].len() as isize,
+        y: map.len() as isize,
+        x: map[0].len() as isize,
     }
 }

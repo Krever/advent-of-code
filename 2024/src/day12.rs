@@ -23,16 +23,16 @@ where
 {
     let mut visited = HashSet::new();
     let bounds = Vec2 {
-        row: map.len() as isize,
-        col: map[0].len() as isize,
+        y: map.len() as isize,
+        x: map[0].len() as isize,
     };
 
     let total_price: usize = (0..map.len())
         .cartesian_product(0..map[0].len())
         .filter_map(|(row, col)| {
             let pos = Vec2 {
-                row: row as isize,
-                col: col as isize,
+                y: row as isize,
+                x: col as isize,
             };
             if visited.contains(&pos) {
                 None
@@ -69,7 +69,7 @@ fn calculate_area_and_perimeter(
             let neighbor = pos.add(dir);
 
             if !neighbor.is_within_bounds(bounds)
-                || map[neighbor.row as usize][neighbor.col as usize] != plant_type
+                || map[neighbor.y as usize][neighbor.x as usize] != plant_type
             {
                 perimeter += 1;
             } else if !visited.contains(&neighbor) {
@@ -103,7 +103,7 @@ fn calculate_area_and_sides(
             let neighbor = pos.move_dir(dir);
 
             if !neighbor.is_within_bounds(bounds)
-                || map[neighbor.row as usize][neighbor.col as usize] != plant_type
+                || map[neighbor.y as usize][neighbor.x as usize] != plant_type
             {
                 sides.insert((neighbor, dir));
             } else if !visited.contains(&neighbor) {

@@ -1,21 +1,21 @@
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Vec2 {
-    pub(crate) row: isize,
-    pub(crate) col: isize,
+    pub(crate) y: isize, // row
+    pub(crate) x: isize, //col
 }
 
 impl Vec2 {
     fn difference(self, other: Vec2) -> Vec2 {
         Vec2 {
-            row: self.row - other.row,
-            col: self.col - other.col,
+            y: self.y - other.y,
+            x: self.x - other.x,
         }
     }
 
     pub(crate) fn add(self, other: Vec2) -> Vec2 {
         Vec2 {
-            row: self.row + other.row,
-            col: self.col + other.col,
+            y: self.y + other.y,
+            x: self.x + other.x,
         }
     }
     pub(crate) fn move_dir(self, dir: Dir4) -> Vec2 {
@@ -24,13 +24,13 @@ impl Vec2 {
 
     fn subtract(self, other: Vec2) -> Vec2 {
         Vec2 {
-            row: self.row - other.row,
-            col: self.col - other.col,
+            y: self.y - other.y,
+            x: self.x - other.x,
         }
     }
 
     pub(crate) fn is_within_bounds(self, dimensions: Vec2) -> bool {
-        self.row >= 0 && self.row < dimensions.row && self.col >= 0 && self.col < dimensions.col
+        self.y >= 0 && self.y < dimensions.y && self.x >= 0 && self.x < dimensions.x
     }
 }
 
@@ -49,10 +49,10 @@ where
 }
 
 pub const DIRECTIONS: [Vec2; 4] = [
-    Vec2 { row: -1, col: 0 }, // Up
-    Vec2 { row: 1, col: 0 },  // Down
-    Vec2 { row: 0, col: -1 }, // Left
-    Vec2 { row: 0, col: 1 },  // Right
+    Vec2 { y: -1, x: 0 }, // Up
+    Vec2 { y: 1, x: 0 },  // Down
+    Vec2 { y: 0, x: -1 }, // Left
+    Vec2 { y: 0, x: 1 },  // Right
 ];
 
 #[derive(Debug, PartialEq, EnumIter, Hash, Clone, Copy, Eq)]
@@ -75,10 +75,10 @@ impl Dir4 {
 
     pub fn move_vec(self) -> Vec2 {
         match self {
-            Dir4::N => Vec2 { row: -1, col: 0 },
-            Dir4::E => Vec2 { row: 0, col: 1 },
-            Dir4::W => Vec2 { row: 0, col: -1 },
-            Dir4::S => Vec2 { row: 1, col: 0 },
+            Dir4::N => Vec2 { y: -1, x: 0 },
+            Dir4::E => Vec2 { y: 0, x: 1 },
+            Dir4::W => Vec2 { y: 0, x: -1 },
+            Dir4::S => Vec2 { y: 1, x: 0 },
         }
     }
 }
