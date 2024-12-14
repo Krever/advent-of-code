@@ -32,6 +32,26 @@ impl Vec2 {
     pub(crate) fn is_within_bounds(self, dimensions: Vec2) -> bool {
         self.y >= 0 && self.y < dimensions.y && self.x >= 0 && self.x < dimensions.x
     }
+    
+    pub fn wrap(&self, bounds: Vec2) -> Vec2 {
+        Vec2 {
+            x: (self.x.rem_euclid(bounds.x)),
+            y: (self.y.rem_euclid(bounds.y)),
+        }
+    }
+    pub fn neighbors(&self) -> Vec<Vec2> {
+        let directions = [
+            Vec2 { x: -1, y: 0 }, // Left
+            Vec2 { x: 1, y: 0 },  // Right
+            Vec2 { x: 0, y: -1 }, // Up
+            Vec2 { x: 0, y: 1 },  // Down
+        ];
+        directions
+            .iter()
+            .map(|d| self.add(*d))
+            .collect()
+    }
+
 }
 
 use std::time::Instant;
