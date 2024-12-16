@@ -5,12 +5,15 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
-    fn difference(self, other: Vec2) -> Vec2 {
+    pub(crate) fn negate(&self) -> Vec2 {
         Vec2 {
-            y: self.y - other.y,
-            x: self.x - other.x,
+            x: -self.x,
+            y: -self.y,
         }
     }
+}
+
+impl Vec2 {
 
     pub(crate) fn add(self, other: Vec2) -> Vec2 {
         Vec2 {
@@ -22,7 +25,7 @@ impl Vec2 {
         self.add(dir.move_vec())
     }
 
-    fn subtract(self, other: Vec2) -> Vec2 {
+    pub fn subtract(self, other: Vec2) -> Vec2 {
         Vec2 {
             y: self.y - other.y,
             x: self.x - other.x,
@@ -32,7 +35,7 @@ impl Vec2 {
     pub(crate) fn is_within_bounds(self, dimensions: Vec2) -> bool {
         self.y >= 0 && self.y < dimensions.y && self.x >= 0 && self.x < dimensions.x
     }
-    
+
     pub fn wrap(&self, bounds: Vec2) -> Vec2 {
         Vec2 {
             x: (self.x.rem_euclid(bounds.x)),
@@ -46,12 +49,8 @@ impl Vec2 {
             Vec2 { x: 0, y: -1 }, // Up
             Vec2 { x: 0, y: 1 },  // Down
         ];
-        directions
-            .iter()
-            .map(|d| self.add(*d))
-            .collect()
+        directions.iter().map(|d| self.add(*d)).collect()
     }
-
 }
 
 use std::time::Instant;
@@ -84,12 +83,28 @@ pub enum Dir4 {
 }
 
 impl Dir4 {
+    pub(crate) fn rotate_clockwise(&self) -> Dir4 {
+        match self {
+            Dir4::N => Dir4::E,
+            Dir4::E => Dir4::S,
+            Dir4::S => Dir4::W,
+            Dir4::W => Dir4::N,
+        }
+    }
+
+    pub(crate) fn rotate_counter_clockwise(&self) -> Dir4 {
+        match self {
+            Dir4::N => Dir4::W,
+            Dir4::W => Dir4::S,
+            Dir4::S => Dir4::E,
+            Dir4::E => Dir4::N,
+        }
+    }
+
     pub(crate) fn is_vertical(&self) -> bool {
         self == &Dir4::N || self == &Dir4::S
     }
-}
 
-impl Dir4 {
     pub const VALUES: [Dir4; 4] = [Dir4::N, Dir4::E, Dir4::W, Dir4::S];
 
     pub fn perpendicular(self) -> [Dir4; 2] {

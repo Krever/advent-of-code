@@ -9,3 +9,4 @@ regex = "1.11.1"
 strum = "0.26.3"
 strum_macros = "0.26.4"
 rayon = "1.10.0"
+im = { version = "*", features = ["proptest", "serde"] }
