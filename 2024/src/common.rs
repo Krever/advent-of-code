@@ -84,6 +84,12 @@ pub enum Dir4 {
 }
 
 impl Dir4 {
+    pub(crate) fn is_vertical(&self) -> bool {
+        self == &Dir4::N || self == &Dir4::S
+    }
+}
+
+impl Dir4 {
     pub const VALUES: [Dir4; 4] = [Dir4::N, Dir4::E, Dir4::W, Dir4::S];
 
     pub fn perpendicular(self) -> [Dir4; 2] {
