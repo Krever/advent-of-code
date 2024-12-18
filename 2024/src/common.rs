@@ -51,6 +51,13 @@ impl Vec2 {
         ];
         directions.iter().map(|d| self.add(*d)).collect()
     }
+    pub fn as_positive(&self) -> Option<Vec2> {
+        if self.x < 0 || self.y < 0 {
+            None
+        } else {
+            Some(*self)
+        }
+    }
 }
 
 use std::time::Instant;
