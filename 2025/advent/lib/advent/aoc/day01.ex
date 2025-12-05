@@ -24,28 +24,16 @@ defmodule Advent.AOC.Day01 do
       case d do
         "L" -> :L
         "R" -> :R
-        _ -> raise ArgumentError, "Invalid direction: #{inspect(d)}"
       end
 
-    dist =
-      rest
-      |> String.trim()
-      |> String.to_integer()
-
-    {dir, dist}
+    {dir, String.to_integer(rest)}
   end
 
   @spec part1(rotations()) :: non_neg_integer()
   def part1(rotations) do
     {_pos, count} =
       Enum.reduce(rotations, {50, 0}, fn {dir, dist}, {pos, count} ->
-        new_pos =
-          case dir do
-            :L -> rem(pos - dist, 100)
-            :R -> rem(pos + dist, 100)
-          end
-          |> normalize()
-
+        new_pos = new_position(pos, dir)
         new_count = if new_pos == 0, do: count + 1, else: count
         {new_pos, new_count}
       end)
@@ -53,8 +41,43 @@ defmodule Advent.AOC.Day01 do
     count
   end
 
-  @spec part2(term()) :: String.t()
-  def part2(_data), do: ""
+  # -------- Part 2 --------
+
+  @spec part2(rotations()) :: non_neg_integer()
+  def part2(rotations) do
+    {_pos, count} =
+      Enum.reduce(rotations, {50, 0}, fn {dir, dist}, {pos, count} ->
+        zeros_during = zeros_during_rotation(pos, dist, dir)
+        new_pos = new_position(pos, dir)
+        {new_pos, count + zeros_during}
+      end)
+
+    count
+  end
+
+  @spec zeros_during_rotation(pos :: integer(), dist :: integer(), dir :: rotation()) ::
+          non_neg_integer()
+  defp zeros_during_rotation(pos, dist, dir) do
+    raw =
+      case dir do
+        :R -> rem(100 - pos, 100)
+        :L -> rem(pos, 100)
+      end
+
+    k0 = if raw == 0, do: 100, else: raw
+
+    if k0 > dist,
+      do: 0,
+      else: 1 + div(dist - k0, 100)
+  end
+
+  def new_position(pos, dir) do
+    case dir do
+      :R -> rem(pos + dist, 100)
+      :L -> rem(pos - dist, 100)
+    end
+    |> normalize()
+  end
 
   @spec normalize(integer()) :: 0..99
   defp normalize(n) when n < 0, do: n + 100
