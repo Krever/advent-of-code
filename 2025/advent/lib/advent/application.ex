@@ -8,8 +8,6 @@ defmodule Advent.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      AdventWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:advent, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Advent.PubSub},
       # Start a worker by calling: Advent.Worker.start_link(arg)
       # {Advent.Worker, arg},

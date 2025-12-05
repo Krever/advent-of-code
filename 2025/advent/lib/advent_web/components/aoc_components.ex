@@ -12,7 +12,6 @@ defmodule AdventWeb.AOCComponents do
   """
 
   use Phoenix.Component
-  use Gettext, backend: AdventWeb.Gettext
   alias AdventWeb.CoreComponents, as: CC
 
   @doc """
@@ -83,7 +82,7 @@ defmodule AdventWeb.AOCComponents do
               ><%= @input || "" %></textarea>
 
               <div class="flex gap-2">
-                <CC.button class="btn btn-primary"><%= gettext("Solve") %></CC.button>
+                <CC.button class="btn btn-primary">Solve</CC.button>
                 <span class="opacity-60 self-center text-sm">Press Ctrl+Enter to submit</span>
               </div>
             </.form>

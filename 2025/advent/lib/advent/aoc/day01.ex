@@ -33,7 +33,7 @@ defmodule Advent.AOC.Day01 do
   def part1(rotations) do
     {_pos, count} =
       Enum.reduce(rotations, {50, 0}, fn {dir, dist}, {pos, count} ->
-        new_pos = new_position(pos, dir)
+        new_pos = new_position(pos, dist, dir)
         new_count = if new_pos == 0, do: count + 1, else: count
         {new_pos, new_count}
       end)
@@ -48,7 +48,7 @@ defmodule Advent.AOC.Day01 do
     {_pos, count} =
       Enum.reduce(rotations, {50, 0}, fn {dir, dist}, {pos, count} ->
         zeros_during = zeros_during_rotation(pos, dist, dir)
-        new_pos = new_position(pos, dir)
+        new_pos = new_position(pos, dist, dir)
         {new_pos, count + zeros_during}
       end)
 
@@ -71,7 +71,7 @@ defmodule Advent.AOC.Day01 do
       else: 1 + div(dist - k0, 100)
   end
 
-  def new_position(pos, dir) do
+  def new_position(pos, dist, dir) do
     case dir do
       :R -> rem(pos + dist, 100)
       :L -> rem(pos - dist, 100)
