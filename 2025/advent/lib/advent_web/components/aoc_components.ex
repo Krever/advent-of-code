@@ -24,11 +24,12 @@ defmodule AdventWeb.AOCComponents do
   Assigns:
     * `:year` - year as integer or string (optional; defaults to current year)
     * `:day` - day number as integer or string (required for title)
-    * `:input` - the textarea value (defaults to "")
+    * `:input` - the textarea value (when nil and `:prefill_input` is true, the component will auto-load)
     * `:rows` - textarea rows (defaults to 12)
     * `:submit_event` - form submit event name (defaults to "solve")
     * `:placeholder` - placeholder text for the textarea (optional)
     * `:result1` / `:result2` - values to show for each part (optional)
+    * `:prefill_input` - boolean to enable/disable auto-loading from priv (defaults to true)
 
   Slots:
     * `:tools` - optional slot above the textarea (e.g., sample input buttons)
@@ -36,12 +37,13 @@ defmodule AdventWeb.AOCComponents do
   """
   attr :year, :any, default: nil
   attr :day, :any, default: nil
-  attr :input, :string, default: ""
+  attr :input, :string, default: nil
   attr :rows, :integer, default: 12
   attr :submit_event, :string, default: "solve"
   attr :placeholder, :string, default: nil
   attr :result1, :any, default: nil
   attr :result2, :any, default: nil
+  attr :prefill_input, :boolean, default: true
   slot :tools
   slot :extra_results
 
@@ -49,6 +51,7 @@ defmodule AdventWeb.AOCComponents do
     assigns =
       assigns
       |> assign_new(:year, fn -> default_year() end)
+      |> maybe_prefill_input()
 
     ~H"""
     <section class="container mx-auto p-4 sm:p-6">
@@ -77,7 +80,7 @@ defmodule AdventWeb.AOCComponents do
                 rows={@rows}
                 class="textarea textarea-bordered w-full font-mono text-sm"
                 placeholder={@placeholder}
-              ><%= @input %></textarea>
+              ><%= @input || "" %></textarea>
 
               <div class="flex gap-2">
                 <CC.button class="btn btn-primary"><%= gettext("Solve") %></CC.button>
@@ -127,6 +130,45 @@ defmodule AdventWeb.AOCComponents do
       _ -> 2025
     end
   end
+
+  defp maybe_prefill_input(assigns) do
+    # Only prefill if enabled and :input wasn't provided
+    cond do
+      Map.get(assigns, :prefill_input, true) != true -> assigns
+      Map.get(assigns, :input) not in [nil] -> assigns
+      is_nil(Map.get(assigns, :day)) -> assigns
+      true ->
+        # Normalize types
+        year = normalize_int(Map.get(assigns, :year) || default_year())
+        day = normalize_int(Map.get(assigns, :day))
+        input = load_input(year, day)
+        assign(assigns, :input, input)
+    end
+  end
+
+  defp normalize_int(nil), do: nil
+  defp normalize_int(v) when is_integer(v), do: v
+  defp normalize_int(v) when is_binary(v) do
+    case Integer.parse(v) do
+      {i, _} -> i
+      :error -> nil
+    end
+  end
+
+  # Reads puzzle input from priv/inputs/<year>/day<DD>.txt if it exists
+  defp load_input(year, day) when is_integer(year) and is_integer(day) do
+    app = :advent
+    priv_dir = app |> :code.priv_dir() |> to_string()
+    dd = day |> Integer.to_string() |> String.pad_leading(2, "0")
+    path = Path.join([priv_dir, "inputs", Integer.to_string(year), "day" <> dd <> ".txt"])
+
+    case File.read(path) do
+      {:ok, content} -> content
+      _ -> ""
+    end
+  end
+
+  defp load_input(_, _), do: ""
 
   defp render_result(nil), do: "—"
   defp render_result(result) when is_binary(result), do: result

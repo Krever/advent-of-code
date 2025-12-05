@@ -3,8 +3,16 @@ defmodule AdventWeb.Day01Live do
   alias Advent.AOC.Day01
   alias AdventWeb.AOCComponents, as: AOC
 
+  @year 2025
+  @day 1
+
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, input: "", result1: nil, result2: nil)}
+    {:ok,
+     socket
+     |> assign(:year, @year)
+     |> assign(:day, @day)
+     |> assign(:result1, nil)
+     |> assign(:result2, nil)}
   end
 
   def handle_event("solve", %{"input" => input}, socket) do
@@ -18,7 +26,8 @@ defmodule AdventWeb.Day01Live do
 
   def render(assigns) do
     ~H"""
-    <AOC.aoc_day year={2025} day={1} input={@input} result1={@result1} result2={@result2} />
+    <AOC.aoc_day year={@year} day={@day} result1={@result1} result2={@result2} />
     """
   end
+
 end
